@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VK Project Portfolio Manager</title>
+<meta name="description" content="VK Project Portfolio Manager — a premium personal dashboard for tracking software projects, built by Vimal Kumar." />
+
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml" />
+
+<!-- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (data) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/dashboard.css" />
+<link rel="stylesheet" href="css/modal.css" />
+<link rel="stylesheet" href="css/animations.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+
+<!-- ============================= LOADING SCREEN ============================= -->
+<div id="loading-screen" class="loading-screen" aria-hidden="true">
+  <svg class="loading-logo" viewBox="0 0 120 120" width="88" height="88" aria-hidden="true">
+    <defs>
+      <linearGradient id="vkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#7C6CFF"/>
+        <stop offset="100%" stop-color="#45E8D6"/>
+      </linearGradient>
+    </defs>
+    <polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="none" stroke="url(#vkGrad)" stroke-width="3" class="loading-hex"/>
+    <path class="loading-path" d="M32 38 L52 82 L60 82 L44 38 Z" fill="url(#vkGrad)"/>
+    <path class="loading-path" d="M64 38 L64 82 L72 82 L72 64 L78 58 L92 82 L101 82 L83 52 L100 38 L90 38 L72 54 L72 38 Z" fill="url(#vkGrad)"/>
+  </svg>
+  <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+  <p class="loading-text">Preparing your portfolio…</p>
+</div>
+
+<!-- ============================= APP SHELL ============================= -->
+<div id="app" class="app" hidden>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+    <div class="sidebar-brand">
+      <svg class="brand-mark" viewBox="0 0 120 120" width="34" height="34" aria-hidden="true">
+        <polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="none" stroke="url(#vkGrad)" stroke-width="6"/>
+        <path d="M32 38 L52 82 L60 82 L44 38 Z" fill="url(#vkGrad)"/>
+        <path d="M64 38 L64 82 L72 82 L72 64 L78 58 L92 82 L101 82 L83 52 L100 38 L90 38 L72 54 L72 38 Z" fill="url(#vkGrad)"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-title">VK Portfolio</span>
+        <span class="brand-subtitle">Project Manager</span>
+      </div>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar" title="Collapse sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Views">
+      <button class="nav-item is-active" data-view="dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="all">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>All Projects</span>
+        <span class="nav-count" id="navCountAll">0</span>
+      </button>
+      <button class="nav-item" data-view="pinned">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l1.9 5.8H20l-4.9 3.6 1.9 5.8-4.9-3.6L7.1 17.2l1.9-5.8L4 7.8h6.1L12 2z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span>Pinned</span>
+        <span class="nav-count" id="navCountPinned">0</span>
+      </button>
+      <button class="nav-item" data-view="favorites">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7.5-4.6-10-9.1C.5 8.1 2.3 4.8 5.8 4.2c2-.3 3.9.7 6.2 3 2.3-2.3 4.2-3.3 6.2-3 3.5.6 5.3 3.9 3.8 7.7C19.5 16.4 12 21 12 21z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        <span>Favorites</span>
+        <span class="nav-count" id="navCountFav">0</span>
+      </button>
+      <button class="nav-item" data-view="completed">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Completed</span>
+        <span class="nav-count" id="navCountDone">0</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="profile-card" id="profileCard" title="Vimal Kumar — Frontend Developer">
+        <span class="avatar">VK</span>
+        <span class="profile-meta">
+          <span class="profile-name">Vimal Kumar</span>
+          <span class="profile-role">Frontend Developer</span>
+        </span>
+      </button>
+      <p class="sidebar-copyright">© 2026 Vimal Kumar</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOP NAV -->
+    <header class="topbar">
+      <button class="icon-btn sidebar-toggle-mobile" id="sidebarToggleMobile" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+
+      <div class="search-wrap">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" class="search-icon"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input type="search" id="searchInput" class="search-input" placeholder="Search projects, tech, tags…" aria-label="Search projects" autocomplete="off" />
+        <kbd class="search-kbd">Ctrl F</kbd>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggleBtn" title="Toggle theme (Ctrl D)" aria-label="Toggle theme">
+          <svg id="themeIconSun" width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <svg id="themeIconMoon" width="19" height="19" viewBox="0 0 24 24" fill="none" hidden><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn" id="notifBtn" title="Notifications" aria-label="Notifications">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span class="notif-dot" id="notifDot" hidden></span>
+        </button>
+        <div class="menu-wrap">
+          <button class="icon-btn" id="moreMenuBtn" title="More" aria-label="More options" aria-haspopup="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
+          </button>
+          <div class="menu-dropdown" id="moreMenuDropdown" role="menu" hidden>
+            <button role="menuitem" id="menuExport">Export JSON <kbd>Ctrl E</kbd></button>
+            <button role="menuitem" id="menuImport">Import JSON <kbd>Ctrl I</kbd></button>
+            <button role="menuitem" id="menuShortcuts">Keyboard Shortcuts</button>
+            <div class="menu-divider"></div>
+            <button role="menuitem" id="menuClearAll" class="menu-danger">Clear All Projects</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="newProjectBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          New Project
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content" id="content">
+
+      <section class="welcome-block fade-up">
+        <div>
+          <h1 class="welcome-title">Welcome Back, Vimal <span class="wave">👋</span></h1>
+          <p class="welcome-subtitle">Manage all your software projects from one beautiful dashboard.</p>
+        </div>
+        <div class="quick-actions">
+          <button class="btn btn-ghost" id="quickImport">Import</button>
+          <button class="btn btn-ghost" id="quickExport">Export</button>
+          <button class="btn btn-primary" id="quickNew">+ New Project</button>
+        </div>
+      </section>
+
+      <!-- STATISTICS -->
+      <section class="stats-grid fade-up" id="statsGrid" aria-label="Portfolio statistics"></section>
+
+      <!-- TOOLBAR: filters + sort -->
+      <section class="toolbar fade-up">
+        <div class="filter-chips" id="filterChips">
+          <button class="chip is-active" data-filter-status="all">All Status</button>
+          <button class="chip" data-filter-status="planning">Planning</button>
+          <button class="chip" data-filter-status="in-progress">In Progress</button>
+          <button class="chip" data-filter-status="completed">Completed</button>
+        </div>
+
+        <div class="toolbar-controls">
+          <select id="priorityFilter" class="select-input" aria-label="Filter by priority">
+            <option value="all">All Priorities</option>
+            <option value="high">High Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="low">Low Priority</option>
+          </select>
+          <select id="categoryFilter" class="select-input" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+          </select>
+          <select id="sortSelect" class="select-input" aria-label="Sort projects">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="az">A – Z</option>
+            <option value="za">Z – A</option>
+            <option value="progress">Progress</option>
+            <option value="priority">Priority</option>
+            <option value="updated">Recently Updated</option>
+          </select>
+          <button class="icon-btn" id="clearFiltersBtn" title="Clear filters" aria-label="Clear filters">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- PROJECT GRID -->
+      <section class="section-block fade-up">
+        <div class="section-heading">
+          <h2 id="gridTitle">All Projects</h2>
+          <span class="section-count" id="gridCount">0 projects</span>
+        </div>
+        <div id="projectGrid" class="project-grid"></div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="empty-state" hidden>
+          <svg width="180" height="140" viewBox="0 0 220 170" fill="none" aria-hidden="true" class="empty-illustration">
+            <rect x="30" y="40" width="160" height="110" rx="14" fill="url(#vkGrad)" opacity="0.12"/>
+            <rect x="50" y="60" width="120" height="14" rx="7" fill="url(#vkGrad)" opacity="0.35"/>
+            <rect x="50" y="84" width="80" height="10" rx="5" fill="url(#vkGrad)" opacity="0.25"/>
+            <circle cx="150" cy="115" r="26" fill="none" stroke="url(#vkGrad)" stroke-width="3"/>
+            <path d="M142 115l6 6 12-14" stroke="url(#vkGrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="60" cy="30" r="6" fill="url(#vkGrad)" opacity="0.5"/>
+            <circle cx="190" cy="150" r="4" fill="url(#vkGrad)" opacity="0.4"/>
+          </svg>
+          <h3>Welcome, Vimal!</h3>
+          <p>Start building your amazing portfolio.<br/>Click "New Project" to add your first project.</p>
+          <button class="btn btn-primary" id="emptyStateNewBtn">+ New Project</button>
+        </div>
+
+        <!-- NO RESULTS STATE -->
+        <div id="noResultsState" class="empty-state" hidden>
+          <svg width="140" height="110" viewBox="0 0 220 170" fill="none" aria-hidden="true" class="empty-illustration">
+            <circle cx="95" cy="85" r="50" fill="none" stroke="url(#vkGrad)" stroke-width="4" opacity="0.6"/>
+            <path d="M132 122l40 40" stroke="url(#vkGrad)" stroke-width="6" stroke-linecap="round"/>
+            <path d="M75 85h40M95 65v40" stroke="url(#vkGrad)" stroke-width="4" stroke-linecap="round" opacity="0.5" transform="rotate(45 95 85)"/>
+          </svg>
+          <h3>No projects match your filters</h3>
+          <p>Try adjusting your search or filters.</p>
+          <button class="btn btn-ghost" id="noResultsResetBtn">Reset Filters</button>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <p>© 2026 Vimal Kumar</p>
+        <p>Built using HTML, CSS &amp; Vanilla JavaScript</p>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<!-- ============================= PROJECT FORM MODAL ============================= -->
+<div class="modal-overlay" id="formModalOverlay" hidden>
+  <div class="modal modal-form" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+    <div class="modal-header">
+      <h2 id="formModalTitle">New Project</h2>
+      <button class="icon-btn" id="formModalClose" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <form id="projectForm" class="modal-body" novalidate>
+      <input type="hidden" id="projectId" />
+
+      <div class="form-row">
+        <label for="fTitle">Project Title <span class="req">*</span></label>
+        <input type="text" id="fTitle" maxlength="80" placeholder="e.g. VK Task Tracker" required />
+        <p class="field-error" id="errTitle"></p>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="fCategory">Category</label>
+          <input type="text" id="fCategory" list="categoryList" placeholder="e.g. Web App" />
+          <datalist id="categoryList"></datalist>
+        </div>
+        <div class="form-row">
+          <label for="fThumbnail">Thumbnail URL</label>
+          <input type="url" id="fThumbnail" placeholder="https://…/image.png" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="fDescription">Description</label>
+        <textarea id="fDescription" rows="3" maxlength="600" placeholder="What does this project do?"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="fTech">Technologies Used <span class="hint">(comma separated)</span></label>
+        <input type="text" id="fTech" placeholder="HTML, CSS, JavaScript" />
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="fGithub">GitHub Repository</label>
+          <input type="url" id="fGithub" placeholder="https://github.com/username/repo" />
+          <p class="field-error" id="errGithub"></p>
+        </div>
+        <div class="form-row">
+          <label for="fDemo">Live Demo</label>
+          <input type="url" id="fDemo" placeholder="https://your-demo.com" />
+          <p class="field-error" id="errDemo"></p>
+        </div>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-row">
+          <label for="fStatus">Status</label>
+          <select id="fStatus">
+            <option value="planning">Planning</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="fPriority">Priority</label>
+          <select id="fPriority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="fProgress">Progress <span id="fProgressVal">0%</span></label>
+          <input type="range" id="fProgress" min="0" max="100" step="1" value="0" />
+          <p class="field-error" id="errProgress"></p>
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label for="fStartDate">Start Date</label>
+          <input type="date" id="fStartDate" />
+        </div>
+        <div class="form-row">
+          <label for="fEndDate">End Date</label>
+          <input type="date" id="fEndDate" />
+          <p class="field-error" id="errDates"></p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="fTags">Tags <span class="hint">(comma separated)</span></label>
+        <input type="text" id="fTags" placeholder="portfolio, personal, api" />
+      </div>
+
+      <div class="form-row">
+        <label for="fNotes">Notes</label>
+        <textarea id="fNotes" rows="2" maxlength="400" placeholder="Anything else worth remembering…"></textarea>
+      </div>
+
+      <div class="form-row form-row-inline">
+        <label class="toggle-label">
+          <input type="checkbox" id="fFavorite" />
+          <span>Mark as favorite</span>
+        </label>
+        <label class="toggle-label">
+          <input type="checkbox" id="fPinned" />
+          <span>Pin to top</span>
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="formCancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="formSubmitBtn">Save Project</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================= PROJECT DETAILS MODAL ============================= -->
+<div class="modal-overlay" id="detailsModalOverlay" hidden>
+  <div class="modal modal-details" role="dialog" aria-modal="true" aria-labelledby="detailsTitle">
+    <button class="icon-btn modal-close-abs" id="detailsModalClose" aria-label="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <div class="details-hero" id="detailsHero">
+      <div class="details-hero-overlay"></div>
+    </div>
+    <div class="modal-body details-body">
+      <div class="details-top">
+        <div>
+          <span class="details-category" id="detailsCategory"></span>
+          <h2 id="detailsTitle"></h2>
+        </div>
+        <div class="details-icons">
+          <button class="icon-btn" id="detailsFavoriteBtn" aria-label="Toggle favorite"></button>
+          <button class="icon-btn" id="detailsPinBtn" aria-label="Toggle pin"></button>
+        </div>
+      </div>
+
+      <div class="details-badges" id="detailsBadges"></div>
+
+      <p class="details-description" id="detailsDescription"></p>
+
+      <div class="details-progress">
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="detailsProgressFill"></div></div>
+        <span id="detailsProgressLabel"></span>
+      </div>
+
+      <div class="details-chips" id="detailsTech"></div>
+
+      <div class="details-grid">
+        <div>
+          <h4>Timeline</h4>
+          <p id="detailsDates">—</p>
+        </div>
+        <div>
+          <h4>Tags</h4>
+          <div class="details-chips" id="detailsTags"></div>
+        </div>
+      </div>
+
+      <div class="details-notes" id="detailsNotesWrap">
+        <h4>Notes</h4>
+        <p id="detailsNotes"></p>
+      </div>
+
+      <div class="details-links">
+        <a class="btn btn-ghost details-link" id="detailsGithubLink" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.8 5.4.8 11.7c0 5 3.2 9.2 7.7 10.7.6.1.8-.2.8-.6v-2.2c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.7-1.2-1.7-1-.6.1-.6.1-.6 1.1.1 1.7 1.1 1.7 1.1 1 1.7 2.6 1.2 3.2.9.1-.7.4-1.2.7-1.5-2.5-.3-5.1-1.2-5.1-5.5 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.5.1-3.1 0 0 .9-.3 3 1.1a10 10 0 0 1 5.4 0c2.1-1.4 3-1.1 3-1.1.6 1.6.2 2.8.1 3.1.7.8 1.1 1.8 1.1 3 0 4.3-2.6 5.2-5.1 5.5.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.2 11.2 0 0 0 23.2 11.7C23.2 5.4 18.3.5 12 .5z"/></svg>
+          GitHub <button class="mini-copy" id="detailsGithubCopy" title="Copy link" type="button">⧉</button>
+        </a>
+        <a class="btn btn-primary details-link" id="detailsDemoLink" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 3h7v7M21 3l-9 9M5 5h6v2H7v10h10v-4h2v6H5V5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          Live Demo <button class="mini-copy" id="detailsDemoCopy" title="Copy link" type="button">⧉</button>
+        </a>
+      </div>
+
+      <div class="details-meta">
+        <span id="detailsCreated"></span>
+        <span id="detailsUpdated"></span>
+        <span class="details-id" id="detailsIdLabel"></span>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="detailsDeleteBtn">Delete</button>
+        <button class="btn btn-primary" id="detailsEditBtn">Edit Project</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= CONFIRM DIALOG ============================= -->
+<div class="modal-overlay" id="confirmOverlay" hidden>
+  <div class="modal modal-confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMessage">This action cannot be undone.</p>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="confirmCancelBtn">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= IMPORT MODAL ============================= -->
+<div class="modal-overlay" id="importOverlay" hidden>
+  <div class="modal modal-confirm" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+    <h3 id="importTitle">Import Projects</h3>
+    <p>Choose a VK Portfolio JSON export file, then decide how to apply it.</p>
+    <input type="file" id="importFileInput" accept="application/json" class="file-input" />
+    <div class="import-options">
+      <label class="toggle-label"><input type="radio" name="importMode" value="merge" checked /><span>Merge with existing projects</span></label>
+      <label class="toggle-label"><input type="radio" name="importMode" value="replace" /><span>Replace all existing projects</span></label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="importCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="importConfirmBtn">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= SHORTCUTS MODAL ============================= -->
+<div class="modal-overlay" id="shortcutsOverlay" hidden>
+  <div class="modal modal-confirm modal-shortcuts" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+    <h3 id="shortcutsTitle">Keyboard Shortcuts</h3>
+    <ul class="shortcuts-list">
+      <li><kbd>Ctrl</kbd> + <kbd>N</kbd><span>New Project</span></li>
+      <li><kbd>Ctrl</kbd> + <kbd>F</kbd><span>Search</span></li>
+      <li><kbd>Ctrl</kbd> + <kbd>E</kbd><span>Export</span></li>
+      <li><kbd>Ctrl</kbd> + <kbd>I</kbd><span>Import</span></li>
+      <li><kbd>Ctrl</kbd> + <kbd>D</kbd><span>Toggle Theme</span></li>
+      <li><kbd>Esc</kbd><span>Close Modal</span></li>
+      <li><kbd>Delete</kbd><span>Delete Selected Project</span></li>
+    </ul>
+    <div class="modal-footer">
+      <button class="btn btn-primary" id="shortcutsCloseBtn">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= TOAST CONTAINER ============================= -->
+<div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ============================= FLOATING ACTION BUTTON ============================= -->
+<button class="fab" id="fabBtn" aria-label="New Project" title="New Project">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+</button>
+
+<!-- ============================= SCRIPTS ============================= -->
+<script src="js/utilities.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/statistics.js"></script>
+<script src="js/search.js"></script>
+<script src="js/filter.js"></script>
+<script src="js/dragdrop.js"></script>
+<script src="js/modal.js"></script>
+<script src="js/importExport.js"></script>
+<script src="js/shortcuts.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

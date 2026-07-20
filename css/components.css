@@ -1,0 +1,163 @@
+/* =========================================================================
+   VK Project Portfolio Manager — components.css
+   Buttons, chips, badges, inputs, toasts, FAB, dropdown menus
+   ========================================================================= */
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:8px; justify-content:center;
+  padding:10px 18px; border-radius:var(--radius-pill); font-size:13.5px; font-weight:600;
+  transition: all .2s var(--ease-out); white-space:nowrap; position:relative; overflow:hidden;
+}
+.btn-primary{
+  background:var(--gradient-brand); color:#fff; box-shadow: var(--shadow-glow);
+}
+.btn-primary:hover{ transform:translateY(-1px); box-shadow: 0 0 0 1px rgba(124,108,255,.35), 0 12px 34px rgba(124,108,255,.28); }
+.btn-primary:active{ transform:translateY(0); }
+.btn-ghost{
+  background:var(--bg-card); color:var(--text-primary); border:1px solid var(--border-subtle);
+}
+.btn-ghost:hover{ background:var(--bg-card-hover); border-color:var(--border-strong); }
+.btn-danger{
+  background:rgba(255,92,124,0.12); color:var(--danger); border:1px solid rgba(255,92,124,0.3);
+}
+.btn-danger:hover{ background:rgba(255,92,124,0.2); }
+.btn:disabled{ opacity:.5; cursor:not-allowed; transform:none !important; }
+
+/* Ripple */
+.btn .ripple{
+  position:absolute; border-radius:50%; background:rgba(255,255,255,0.45);
+  transform:scale(0); animation:ripple .55s var(--ease-out);
+  pointer-events:none;
+}
+
+/* ---------- Icon buttons ---------- */
+.icon-btn{
+  width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  color:var(--text-secondary); background:transparent; transition: all .18s var(--ease-out); position:relative;
+}
+.icon-btn:hover{ background:var(--bg-card); color:var(--text-primary); }
+.notif-dot{
+  position:absolute; top:8px; right:8px; width:7px; height:7px; border-radius:50%;
+  background:var(--danger); box-shadow:0 0 0 2px var(--bg-void);
+}
+
+/* ---------- Dropdown menu ---------- */
+.menu-wrap{ position:relative; }
+.menu-dropdown{
+  position:absolute; top:calc(100% + 8px); right:0; width:220px;
+  background:var(--bg-elevated); border:1px solid var(--border-subtle); border-radius:var(--radius-md);
+  box-shadow:var(--shadow-lg); padding:6px; z-index:60;
+  animation: dropIn .18s var(--ease-out);
+}
+.menu-dropdown button{
+  display:flex; align-items:center; justify-content:space-between; width:100%;
+  padding:9px 10px; border-radius:9px; font-size:13px; text-align:left; color:var(--text-secondary);
+}
+.menu-dropdown button:hover{ background:var(--bg-card); color:var(--text-primary); }
+.menu-dropdown kbd{ font-family:var(--font-mono); font-size:10px; color:var(--text-faint); }
+.menu-divider{ height:1px; background:var(--border-subtle); margin:6px 4px; }
+.menu-danger{ color:var(--danger) !important; }
+.menu-danger:hover{ background:rgba(255,92,124,0.12) !important; }
+
+/* ---------- Chips / filters ---------- */
+.filter-chips{ display:flex; gap:8px; flex-wrap:wrap; }
+.chip{
+  padding:8px 15px; border-radius:var(--radius-pill); font-size:12.5px; font-weight:600;
+  background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-secondary);
+  transition: all .18s var(--ease-out);
+}
+.chip:hover{ border-color:var(--border-strong); color:var(--text-primary); }
+.chip.is-active{
+  background:var(--gradient-brand); color:#fff; border-color:transparent;
+}
+
+.select-input{
+  padding:9px 14px; border-radius:var(--radius-pill); background:var(--bg-card);
+  border:1px solid var(--border-subtle); font-size:12.5px; color:var(--text-secondary); font-weight:500;
+  transition: all .18s var(--ease-out);
+}
+.select-input:hover{ border-color:var(--border-strong); }
+.select-input:focus{ outline:none; border-color:var(--accent); }
+
+/* ---------- Tech chips / tags ---------- */
+.tech-chip, .tag-chip{
+  font-family:var(--font-mono); font-size:11px; padding:4px 9px; border-radius:7px;
+  background:var(--bg-card); border:1px solid var(--border-subtle); color:var(--text-secondary);
+}
+.tag-chip{ background:rgba(124,108,255,0.1); border-color:rgba(124,108,255,0.22); color:var(--accent); }
+
+/* ---------- Status / priority badges ---------- */
+.badge{
+  font-size:11px; font-weight:700; padding:4px 10px; border-radius:var(--radius-pill);
+  text-transform:uppercase; letter-spacing:0.03em; display:inline-flex; align-items:center; gap:5px;
+}
+.badge::before{ content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+.badge-planning{ background:rgba(92,184,255,0.12); color:var(--info); }
+.badge-in-progress{ background:rgba(255,184,77,0.14); color:var(--amber); }
+.badge-completed{ background:rgba(74,222,128,0.14); color:var(--success); }
+.badge-priority-high{ background:rgba(255,92,124,0.14); color:var(--danger); }
+.badge-priority-medium{ background:rgba(255,184,77,0.14); color:var(--amber); }
+.badge-priority-low{ background:rgba(124,108,255,0.12); color:var(--accent); }
+
+/* ---------- Form fields ---------- */
+.form-row{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+.form-row label{ font-size:12.5px; font-weight:600; color:var(--text-secondary); }
+.form-row .hint{ font-weight:400; color:var(--text-faint); font-size:11.5px; }
+.form-row .req{ color:var(--danger); }
+.form-row input[type="text"],
+.form-row input[type="url"],
+.form-row input[type="date"],
+.form-row textarea,
+.form-row select{
+  padding:11px 14px; border-radius:var(--radius-sm); background:var(--bg-card);
+  border:1px solid var(--border-subtle); font-size:13.5px; transition:all .18s var(--ease-out); resize:vertical;
+}
+.form-row input:focus, .form-row textarea:focus, .form-row select:focus{
+  outline:none; border-color:var(--accent); background:var(--bg-elevated); box-shadow:0 0 0 4px rgba(124,108,255,0.1);
+}
+.form-row input[type="range"]{ accent-color:var(--accent); }
+.form-grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+.form-grid-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:0 14px; }
+.form-row-inline{ flex-direction:row; gap:24px; }
+.toggle-label{ display:flex; align-items:center; gap:8px; font-size:13px; font-weight:500; color:var(--text-secondary); cursor:pointer; }
+.toggle-label input{ accent-color:var(--accent); width:16px; height:16px; }
+.field-error{ font-size:11.5px; color:var(--danger); min-height:14px; }
+
+.file-input{
+  width:100%; padding:12px; border-radius:var(--radius-sm); background:var(--bg-card);
+  border:1px dashed var(--border-strong); font-size:12.5px; margin:14px 0;
+}
+.import-options{ display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+
+/* ---------- Toasts ---------- */
+.toast-container{
+  position:fixed; bottom:24px; right:24px; display:flex; flex-direction:column; gap:10px; z-index:200;
+  max-width:340px;
+}
+.toast{
+  display:flex; align-items:flex-start; gap:10px; padding:13px 16px; border-radius:var(--radius-md);
+  background:var(--bg-elevated); border:1px solid var(--border-subtle); box-shadow:var(--shadow-lg);
+  font-size:13px; color:var(--text-primary); animation: toastIn .28s var(--ease-spring);
+}
+.toast.is-leaving{ animation: toastOut .22s var(--ease-out) forwards; }
+.toast-icon{ flex-shrink:0; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; margin-top:1px; }
+.toast-success .toast-icon{ background:rgba(74,222,128,0.18); color:var(--success); }
+.toast-error .toast-icon{ background:rgba(255,92,124,0.18); color:var(--danger); }
+.toast-info .toast-icon{ background:rgba(92,184,255,0.18); color:var(--info); }
+.toast-close{ margin-left:auto; color:var(--text-faint); flex-shrink:0; }
+
+/* ---------- FAB ---------- */
+.fab{
+  position:fixed; bottom:28px; right:28px; width:56px; height:56px; border-radius:50%;
+  background:var(--gradient-brand); color:#fff; display:flex; align-items:center; justify-content:center;
+  box-shadow: var(--shadow-glow); z-index:150; transition: all .25s var(--ease-spring);
+}
+.fab:hover{ transform: scale(1.08) rotate(90deg); }
+.fab:active{ transform: scale(0.96) rotate(90deg); }
+
+/* ---------- kbd generic ---------- */
+kbd{
+  font-family:var(--font-mono); background:var(--bg-card); border:1px solid var(--border-subtle);
+  border-radius:5px; padding:2px 6px; font-size:11px;
+}
